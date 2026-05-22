@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Password Checker</title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
+
+  <style>
+    body{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background: linear-gradient(135deg,#0f172a,#1e293b,#334155);
+      font-family: Arial, sans-serif;
+    }
+
+    .password-card{
+      width:100%;
+      max-width:450px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border-radius:20px;
+      padding:35px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
+      color:white;
+    }
+
+    .title{
+      text-align:center;
+      font-weight:bold;
+      margin-bottom:25px;
+    }
+
+    .form-control{
+      height:55px;
+      border-radius:12px;
+      border:none;
+      padding-right:50px;
+    }
+
+    .input-box{
+      position:relative;
+    }
+
+    .toggle-eye{
+      position:absolute;
+      right:15px;
+      top:50%;
+      transform:translateY(-50%);
+      cursor:pointer;
+      color:#555;
+      font-size:20px;
+    }
+
+    .btn-checker{
+      height:50px;
+      border-radius:12px;
+      font-weight:bold;
+      font-size:18px;
+      transition:0.3s;
+    }
+
+    .btn-checker:hover{
+      transform:scale(1.03);
+    }
+
+    .result-box{
+      margin-top:20px;
+      padding:15px;
+      border-radius:12px;
+      text-align:center;
+      font-weight:bold;
+      display:none;
+    }
+
+    .weak{
+      background:#dc3545;
+    }
+
+    .medium{
+      background:#ffc107;
+      color:#000;
+    }
+
+    .strong{
+      background:#198754;
+    }
+
+    .rules{
+      margin-top:20px;
+      font-size:14px;
+      opacity:0.9;
+    }
+
+    .rules li{
+      margin-bottom:6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="password-card">
+    <h2 class="title">
+      <i class="bi bi-shield-lock-fill"></i>
+      Password Checker
+    </h2>
+
+    <div class="input-box mb-3">
+      <input
+        type="password"
+        id="password"
+        class="form-control"
+        placeholder="Enter your password"
+      />
+      <i class="bi bi-eye-fill toggle-eye" id="togglePassword"></i>
+    </div>
+
+    <button class="btn btn-primary w-100 btn-checker" id="checkBtn">
+      Check Password
+    </button>
+
+    <div id="result" class="result-box"></div>
+
+    <ul class="rules">
+      <li>✔ Minimum 8 characters</li>
+      <li>✔ Uppercase letter</li>
+      <li>✔ Lowercase letter</li>
+      <li>✔ Number</li>
+      <li>✔ Special character</li>
+    </ul>
+  </div>
+
+  <script>
+    const password = document.getElementById("password");
+    const checkBtn = document.getElementById("checkBtn");
+    const result = document.getElementById("result");
+    const togglePassword = document.getElementById("togglePassword");
+
+    // Show / Hide Password
+    togglePassword.addEventListener("click", () => {
+      if(password.type === "password"){
+        password.type = "text";
+        togglePassword.classList.remove("bi-eye-fill");
+        togglePassword.classList.add("bi-eye-slash-fill");
+      } else {
+        password.type = "password";
+        togglePassword.classList.remove("bi-eye-slash-fill");
+        togglePassword.classList.add("bi-eye-fill");
+      }
+    });
+
+    // Password Checker
+    checkBtn.addEventListener("click", () => {
+      const pass = password.value;
+
+      let strength = 0;
+
+      if(pass.length >= 8) strength++;
+      if(/[A-Z]/.test(pass)) strength++;
+      if(/[a-z]/.test(pass)) strength++;
+      if(/[0-9]/.test(pass)) strength++;
+      if(/[^A-Za-z0-9]/.test(pass)) strength++;
+
+      result.style.display = "block";
+
+      if(pass.length === 0){
+        result.className = "result-box weak";
+        result.innerHTML = "Please enter password!";
+      }
+      else if(strength <= 2){
+        result.className = "result-box weak";
+        result.innerHTML = "❌ Weak Password";
+      }
+      else if(strength <= 4){
+        result.className = "result-box medium";
+        result.innerHTML = "⚠ Medium Password";
+      }
+      else{
+        result.className = "result-box strong";
+        result.innerHTML = "✅ Strong Password";
+      }
+    });
+  </script>
+
+</body>
+</html>
